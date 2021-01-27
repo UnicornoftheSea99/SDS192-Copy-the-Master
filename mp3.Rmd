@@ -18,6 +18,8 @@ output:
     theme: lumen
     df_print: paged
     code_folding: show
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -115,7 +117,7 @@ ggplot(jessie, aes(x = year, y = pct_girls)) +
     panel.background = element_rect(fill = "#92bdd3"),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    text = element_text(family = "Century Gothic"),
+#    text = element_text(family = "Century Gothic"),
     strip.background = element_blank(),
     strip.text = element_text(hjust = 0, face = "bold", size = 14)
   ) +
@@ -168,6 +170,8 @@ jessie %>%
 ```
 
 ### Step 2B: Compute the RMSE for all names
+
+
 
 
 ### Step 2C: Rank and filter the list of names
