@@ -19,7 +19,11 @@ output:
     df_print: paged
     code_folding: show
 editor_options: 
+<<<<<<< HEAD
   chunk_output_type: console
+=======
+  chunk_output_type: inline
+>>>>>>> fcc11753d178806c830e00f9bbf5b3e821ec46e7
 ---
 
 ```{r setup, include=FALSE}
@@ -171,6 +175,26 @@ jessie %>%
 
 ### Step 2B: Compute the RMSE for all names
 
+```{r}
+rmse_all <- function(name_arg) {
+  babynames %>%
+    filter(name == name_arg) %>%
+      select(-prop) %>%
+     pivot_wider(names_from = sex, values_from = n) %>%
+  #mutate(pct_girls = F / (F + M)) %>%
+     mutate(
+       pct_girls = F / (F + M),
+       error = pct_girls - 0.5,
+       squared_error = error^2) %>%
+  summarize(
+    mse = mean(squared_error),
+    rmse = sqrt(mse)
+  )
+}
+
+rmse_all("Jessie")
+#map2_dfr(c("Benjamin", "Cory"), rmse_all)
+```
 
 
 
