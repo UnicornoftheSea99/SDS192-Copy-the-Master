@@ -19,11 +19,7 @@ output:
     df_print: paged
     code_folding: show
 editor_options: 
-<<<<<<< HEAD
   chunk_output_type: console
-=======
-  chunk_output_type: inline
->>>>>>> fcc11753d178806c830e00f9bbf5b3e821ec46e7
 ---
 
 ```{r setup, include=FALSE}
