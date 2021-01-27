@@ -175,6 +175,7 @@ jessie %>%
 rmse_all <- function(name_arg) {
   babynames %>%
     filter(name == name_arg) %>%
+      select(-prop) %>%
      pivot_wider(names_from = sex, values_from = n) %>%
   #mutate(pct_girls = F / (F + M)) %>%
      mutate(
@@ -182,11 +183,10 @@ rmse_all <- function(name_arg) {
        error = pct_girls - 0.5,
        squared_error = error^2) %>%
   summarize(
-    mse = mean(squared_error, na.rm = TRUE),
+    mse = mean(squared_error),
     rmse = sqrt(mse)
   )
 }
-
 rmse_all("Jessie")
 #map2_dfr(c("Benjamin", "Cory"), rmse_all)
 ```
