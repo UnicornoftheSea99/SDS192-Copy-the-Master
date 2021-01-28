@@ -19,7 +19,7 @@ output:
     df_print: paged
     code_folding: show
 editor_options: 
-  chunk_output_type: inline
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -111,7 +111,7 @@ ggplot(jessie, aes(x = year, y = pct_girls)) +
     limits = c(0, 1),
     labels = scales::percent
   ) +
-  scale_x_continuous(NULL) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
