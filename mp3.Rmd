@@ -109,12 +109,14 @@ ggplot(jessie, aes(x = year, y = pct_girls)) +
   ) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
+    breaks = c(0, 0.5, 1),
     labels = scales::percent
   ) +
   scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
+    axis.ticks.y = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     text = element_text(family = "Century Gothic"),
