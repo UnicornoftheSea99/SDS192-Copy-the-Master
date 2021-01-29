@@ -201,6 +201,7 @@ rmse_all("Jessie")
 babynames %>%
   group_by(name) %>%
   group_modify(~rmse_all(.x))
+
 ```
 
 ### Step 2C: Rank and filter the list of names
