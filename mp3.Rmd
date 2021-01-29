@@ -192,7 +192,6 @@ all_babies <- babynames %>%
 ```
 
 ```{r}
-# Julia tries again
 rmse <- function(x) {
   x %>%
     mutate(pct_girls = F / (F + M),
@@ -206,15 +205,15 @@ rmse <- function(x) {
 }
 
 # try to use function on fewer names 
-trial_names <- babynames %>%
-  filter(name == "Jessie" | name == "Marion" | name == "Jackie")
+# trial_names <- babynames %>%
+#   filter(name == "Jessie" | name == "Marion" | name == "Jackie")
 
-trial_names %>%
-  filter( year >= 1930 & year < 2012) %>%
-  select(-prop) %>%
-  pivot_wider(names_from = sex, values_from = n) %>%
-  group_by(name) %>%
-  group_modify(~rmse(.x))
+# trial_names %>%
+#   filter( year >= 1930 & year < 2012) %>%
+#   select(-prop) %>%
+#   pivot_wider(names_from = sex, values_from = n) %>%
+#   group_by(name) %>%
+#   group_modify(~rmse(.x))
 
 # try entire data set - taking forever but might work?
 # babynames %>%
@@ -226,10 +225,18 @@ trial_names %>%
 
 all_babies %>%
   group_by(name)%>%
-  group_modify(~rmse(.x))
+  group_modify(~rmse(.x))%>%
+  head(1)
   
 ```
 
+### Step 2C: Rank and filter the list of names
+```{r, eval = FALSE}
+
+```
+
+
+### Step 2D: Gather the data you need to draw the time series
 ```{r, eval = FALSE}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
@@ -257,23 +264,9 @@ rmse_all <- function(name_arg) {
 #   "Devon", "Cruz", "Michel", "Gale", "Robin",
 #   "Dorian", "Casey", "Dana", "Kim", "Shannon"
 # ), rmse_all)
+
+#will use map_dfr to apply to all names
 ```
-
-```{r}
-# compute RMSE for all names, has issues
-# all_babies %>%
-#   group_by(name) %>%
-#   group_modify(~rmse_all(.x))
-```
-
-
-### Step 2C: Rank and filter the list of names
-```{r, eval = FALSE}
-
-```
-
-
-### Step 2D: Gather the data you need to draw the time series
 
 ### Step 2E: Gather the data you need to draw the points
 
