@@ -32,6 +32,7 @@ library(tidyverse)
 library(sds192)
 library(babynames)
 library(purrr)
+library(dplyr)
 ```
 
 ## Instructions
@@ -205,6 +206,7 @@ babynames %>%
 ```{r}
 #Emily's attempts
 all_babies <- babynames %>%
+  #group_by(name)
   filter(
     year >= 1930 & year < 2012
   ) %>%
@@ -213,27 +215,27 @@ all_babies <- babynames %>%
   mutate(
     pct_girls = F / (F + M),
     error = pct_girls - 0.5,
-    squared_error = error^2
+   squared_error = error^2
   )
 
 #rmse_all %>% 
  # select(teamID) %>% 
 #  map_dbl(mean, na.rm = TRUE)  
 
-find_rmse <- function(data, squared_error) {
-  data %>%
+#find_rmse <- function(data, squared_error) {
+#  data %>%
    # mutate(
    # error = pct_girls - 0.5,
   #  squared_error = error^2
  # ) %>%
-  summarize(
-    mse = mean(squared_error),
-    rmse = sqrt(mse)
-  )
-}
+#  summarize(
+#    mse = mean(squared_error),
+#    rmse = sqrt(mse)
+#  )
+#}
 
-rmse_all %>%
-  map(find_rmse, data = all_babies)
+#rmse_all %>%
+#map(find_rmse, data = all_babies)
 ```
 
 ### Step 2C: Rank and filter the list of names
