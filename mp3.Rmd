@@ -154,9 +154,8 @@ fd_names <- c(
   "Noel", "Rene", "Johnnie", "Ariel", "Jan",
   "Devon", "Cruz", "Michel", "Gale", "Robin",
   "Dorian", "Casey", "Dana", "Kim", "Shannon"
-) 
-#%>%
-  #enframe(name = "fd_rank", value = "name")
+) %>%
+  enframe(name = "fd_rank", value = "name")
 ```
 
 ### Step 2A: Compute the RMSE for Jessie
@@ -195,14 +194,22 @@ rmse_all <- function(name_arg) {
 }
 rmse_all("Jessie")
 
-map(rmse_all, fd_names)
-
+map(fd_names, rmse_all)
+map(c(
+  "Jessie", "Marion", "Jackie", "Alva", "Ollie",
+  "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
+  "Carey", "Tommie", "Angel", "Hollis", "Sammie",
+  "Jamie", "Kris", "Robbie", "Tracy", "Merrill",
+  "Noel", "Rene", "Johnnie", "Ariel", "Jan",
+  "Devon", "Cruz", "Michel", "Gale", "Robin",
+  "Dorian", "Casey", "Dana", "Kim", "Shannon"
+), rmse_all)
 #map2_dfr(c("Benjamin", "Cory"), rmse_all)
 ```
 
 ```{r}
 # compute RMSE for all names, has issues
-babynames %>%
+all_babies %>%
   group_by(name) %>%
   group_modify(~rmse_all(.x))
 ```
