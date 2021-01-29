@@ -183,10 +183,11 @@ all_babies <- babynames %>%
   filter( year >= 1930 & year < 2012) %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
-  # mutate(
+   mutate(
   #   F = replace_na(F,0),
   #   M = replace_na(M,0)
-  # )
+  pct_girls = F / (F + M)
+   )%>%
   filter(!is.na(F),!is.na(M))
   
 ```
@@ -194,7 +195,7 @@ all_babies <- babynames %>%
 ```{r}
 rmse <- function(x) {
   x %>%
-    mutate(pct_girls = F / (F + M),
+    mutate(
            error = pct_girls - 0.5,
            squared_error = error^2
     ) %>%
@@ -238,6 +239,7 @@ all_babies %>%
 ```{r}
 #finds 1000 most popular names
 popular_names <- all_babies %>%
+  filter(pct_girls>=0.3, pct_girls<=0.7)%>%
   group_by(name)%>%
   summarize(
     N = sum(F+M)
