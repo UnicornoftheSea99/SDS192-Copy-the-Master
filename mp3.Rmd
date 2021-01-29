@@ -183,11 +183,11 @@ all_babies <- babynames %>%
   filter( year >= 1930 & year < 2012) %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
-  mutate(
-    F = replace_na(F,0),
-    M = replace_na(M,0)
-  )
-  #filter(!is.na(F),!is.na(M))
+  # mutate(
+  #   F = replace_na(F,0),
+  #   M = replace_na(M,0)
+  # )
+  filter(!is.na(F),!is.na(M))
   
 ```
 
@@ -223,25 +223,37 @@ rmse <- function(x) {
 #   group_by(name) %>%
 #   group_modify(~rmse(.x))
 
+
+  
+```
+
+```{r, eval=FALSE}
 all_babies %>%
   group_by(name)%>%
   group_modify(~rmse(.x))
-# %>%
-#   head(1)
-  
 ```
+
 
 ### Step 2C: Rank and filter the list of names
 ```{r}
 #finds 1000 most popular names
-popular_names <- babynames %>%
+popular_names <- all_babies %>%
   group_by(name)%>%
   summarize(
-    N = sum(n)
+    N = sum(F+M)
   )%>%
   arrange(desc(N))%>%
  head(1000)
 
+pop_rmse <- all_babies%>%
+  inner_join(popular_names, by = "name")
+
+top_rmse<- pop_rmse %>%
+#  head(1000)%>%
+  group_by(name)%>%
+  group_modify(~rmse(.x))%>%
+  arrange(desc(rmse))%>%
+ head(35)
 ```
 
 
