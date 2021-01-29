@@ -202,7 +202,6 @@ rmse_all("Jessie")
 babynames %>%
   group_by(name) %>%
   group_modify(~rmse_all(.x))
-
 ```
 
 ```{r}
