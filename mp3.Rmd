@@ -225,13 +225,22 @@ rmse <- function(x) {
 
 all_babies %>%
   group_by(name)%>%
-  group_modify(~rmse(.x))%>%
-  head(1)
+  group_modify(~rmse(.x))
+# %>%
+#   head(1)
   
 ```
 
 ### Step 2C: Rank and filter the list of names
-```{r, eval = FALSE}
+```{r}
+#finds 1000 most popular names
+popular_names <- babynames %>%
+  group_by(name)%>%
+  summarize(
+    N = sum(n)
+  )%>%
+  arrange(desc(N))%>%
+ head(1000)
 
 ```
 
