@@ -155,8 +155,9 @@ fd_names <- c(
   "Noel", "Rene", "Johnnie", "Ariel", "Jan",
   "Devon", "Cruz", "Michel", "Gale", "Robin",
   "Dorian", "Casey", "Dana", "Kim", "Shannon"
-) %>%
-  enframe(name = "fd_rank", value = "name")
+) 
+#%>%
+  #enframe(name = "fd_rank", value = "name")
 ```
 
 ### Step 2A: Compute the RMSE for Jessie
@@ -178,10 +179,11 @@ jessie %>%
 ```{r}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
-  babynames %>%
+  #babynames %>%
+  all_babies %>%
     filter(name == name_arg) %>%
-      select(-prop) %>%
-     pivot_wider(names_from = sex, values_from = n) %>%
+      #select(-prop) %>%
+     #pivot_wider(names_from = sex, values_from = n) %>%
   #mutate(pct_girls = F / (F + M)) %>%
      mutate(
        pct_girls = F / (F + M),
@@ -193,6 +195,9 @@ rmse_all <- function(name_arg) {
   )
 }
 rmse_all("Jessie")
+
+map(rmse_all, fd_names)
+
 #map2_dfr(c("Benjamin", "Cory"), rmse_all)
 ```
 
@@ -206,17 +211,18 @@ babynames %>%
 ```{r}
 #Emily's attempts
 all_babies <- babynames %>%
-  #group_by(name)
-  filter(
-    year >= 1930 & year < 2012
-  ) %>%
+  filter( year >= 1930 & year < 2012) %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
   mutate(
     pct_girls = F / (F + M),
     error = pct_girls - 0.5,
-   squared_error = error^2
-  )
+    squared_error = error^2
+  ) 
+#%>%
+  #group_by(name) %>%
+  #summarize(total_names = n())
+
 
 #rmse_all %>% 
  # select(teamID) %>% 
