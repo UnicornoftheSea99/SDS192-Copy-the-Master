@@ -34,6 +34,7 @@ library(tidyverse)
 library(sds192)
 library(babynames)
 library(purrr)
+library(dplyr)
 ```
 
 ## Instructions
@@ -179,10 +180,11 @@ jessie %>%
 ```{r}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
-  babynames %>%
+  #babynames %>%
+  all_babies %>%
     filter(name == name_arg) %>%
-      select(-prop) %>%
-     pivot_wider(names_from = sex, values_from = n) %>%
+      #select(-prop) %>%
+     #pivot_wider(names_from = sex, values_from = n) %>%
   #mutate(pct_girls = F / (F + M)) %>%
      mutate(
        pct_girls = F / (F + M),
@@ -194,12 +196,23 @@ rmse_all <- function(name_arg) {
   )
 }
 rmse_all("Jessie")
+
+map(fd_names, rmse_all)
+map(c(
+  "Jessie", "Marion", "Jackie", "Alva", "Ollie",
+  "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
+  "Carey", "Tommie", "Angel", "Hollis", "Sammie",
+  "Jamie", "Kris", "Robbie", "Tracy", "Merrill",
+  "Noel", "Rene", "Johnnie", "Ariel", "Jan",
+  "Devon", "Cruz", "Michel", "Gale", "Robin",
+  "Dorian", "Casey", "Dana", "Kim", "Shannon"
+), rmse_all)
 #map2_dfr(c("Benjamin", "Cory"), rmse_all)
 ```
 
 ```{r}
 # compute RMSE for all names, has issues
-babynames %>%
+all_babies %>%
   group_by(name) %>%
   group_modify(~rmse_all(.x))
 ```
@@ -207,35 +220,37 @@ babynames %>%
 ```{r}
 #Emily's attempts
 all_babies <- babynames %>%
-  filter(
-    year >= 1930 & year < 2012
-  ) %>%
+  filter( year >= 1930 & year < 2012) %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
   mutate(
     pct_girls = F / (F + M),
     error = pct_girls - 0.5,
     squared_error = error^2
-  )
+  ) 
+#%>%
+  #group_by(name) %>%
+  #summarize(total_names = n())
+
 
 #rmse_all %>% 
  # select(teamID) %>% 
 #  map_dbl(mean, na.rm = TRUE)  
 
-find_rmse <- function(data, squared_error) {
-  data %>%
+#find_rmse <- function(data, squared_error) {
+#  data %>%
    # mutate(
    # error = pct_girls - 0.5,
   #  squared_error = error^2
  # ) %>%
-  summarize(
-    mse = mean(squared_error),
-    rmse = sqrt(mse)
-  )
-}
+#  summarize(
+#    mse = mean(squared_error),
+#    rmse = sqrt(mse)
+#  )
+#}
 
-rmse_all %>%
-  map(find_rmse, data = all_babies)
+#rmse_all %>%
+#map(find_rmse, data = all_babies)
 ```
 
 ### Step 2C: Rank and filter the list of names
