@@ -196,7 +196,6 @@ rmse_all <- function(name_arg) {
   )
 }
 rmse_all("Jessie")
-
 map(fd_names, rmse_all)
 map(c(
   "Jessie", "Marion", "Jackie", "Alva", "Ollie",
