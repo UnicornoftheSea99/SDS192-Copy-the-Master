@@ -176,6 +176,41 @@ jessie %>%
 ### Step 2B: Compute the RMSE for all names
 
 ```{r}
+# Julia tries again
+rmse <- function(x) {
+  x %>%
+    mutate(pct_girls = F / (F + M),
+           error = pct_girls - 0.5,
+           squared_error = error^2
+    ) %>%
+    summarize(
+      mse = mean(squared_error),
+      rmse = sqrt(mse)
+    )
+}
+
+# try to use function on fewer names 
+trial_names <- babynames %>%
+  filter(name == "Jessie" | name == "Marion" | name == "Jackie")
+
+trial_names %>%
+  filter( year >= 1930 & year < 2012) %>%
+  select(-prop) %>%
+  pivot_wider(names_from = sex, values_from = n) %>%
+  group_by(name) %>%
+  group_modify(~rmse(.x))
+
+# try entire data set - taking forever but might work?
+babynames %>%
+  filter( year >= 1930 & year < 2012) %>%
+  select(-prop) %>%
+  pivot_wider(names_from = sex, values_from = n) %>%
+  group_by(name) %>%
+  group_modify(~rmse(.x))
+  
+```
+
+```{r, eval = FALSE}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
   #babynames %>%
@@ -215,7 +250,7 @@ all_babies %>%
   group_modify(~rmse_all(.x))
 ```
 
-```{r}
+```{r, eval = FALSE}
 #Emily's attempts
 all_babies <- babynames %>%
   filter( year >= 1930 & year < 2012) %>%
