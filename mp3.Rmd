@@ -239,15 +239,17 @@ all_babies %>%
 ```{r}
 #finds 1000 most popular names
 popular_names <- all_babies %>%
-  #filter(pct_girls>=0.3, pct_girls<=0.7)%>%
+  #filter(pct_girls>=0.25, pct_girls<=0.75)%>%
   group_by(name)%>%
   summarize(
-    avg_pct_girls = mean(pct_girls),
+    #avg_pct_girls = mean(pct_girls),
+    num_years = n(),
     N = sum(F+M)
   ) %>%
-  #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) %>%
-  arrange(desc(N))%>%
- head(1000)
+  filter(num_years >= 70) %>%
+  #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
+  arrange(desc(N))#%>%
+ #head(1000)
 
 pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
