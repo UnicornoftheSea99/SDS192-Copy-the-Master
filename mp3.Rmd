@@ -245,14 +245,14 @@ popular_names <- all_babies %>%
   #filter(pct_girls>=0.25, pct_girls<=0.75)%>%
   group_by(name)%>%
   summarize(
-    avg_pct_girls = mean(pct_girls),
-    num_years = n(),
+    #avg_pct_girls = mean(pct_girls),
+    total_years = n(),
     total_occurences = sum(F+M)
   ) %>%
-  #filter(num_years >= 70) %>%
+  #filter(total_years >= 70) %>%
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
-  arrange(desc(num_occurences))#%>%
- #head(1000)
+  arrange(desc(total_occurences))#%>%
+ head(1000)
 
 pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
@@ -280,7 +280,9 @@ data <- babynames %>%
 dim(data)
 
 # dimensions not 35n, probably because some names are missing in certain years?
+```
 
+```{r}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
   all_babies %>%
@@ -312,7 +314,21 @@ rmse_all <- function(name_arg) {
 ```
 
 ### Step 2E: Gather the data you need to draw the points
+Goal: generalize the pattern you used in Step 1B to compute the most unisex year for each of the 35 names. Again, you can do this by either mapping a function or by joining.
 
+should end up with a data frame with 35 rows.
+
+```{r}
+# from 1B
+jessie_unisex_year <- jessie %>%
+  mutate(distance = abs(pct_girls - 0.5)) %>%
+  arrange(distance) %>%
+  head(1)
+jessie_unisex_year
+```
+
+
+Step 2F: Polish the data
 ### Step 2F: Polish the data
 
 ### Step 2G: Create the annotations
