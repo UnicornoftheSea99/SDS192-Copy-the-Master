@@ -184,11 +184,14 @@ all_babies <- babynames %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
    mutate(
-  #   F = replace_na(F,0),
-  #   M = replace_na(M,0)
+    #F = replace_na(F,0),
+    #M = replace_na(M,0), 
   pct_girls = F / (F + M)
    )%>%
-  filter(!is.na(F),!is.na(M))
+  #filter(!is.na(F), !is.na(M)) 
+  filter(!is.na(F) | !is.na(M))
+
+# something is weird w/ the way we filtered out NAs, because  I found some in stuff we created later
   
 ```
 
@@ -242,19 +245,19 @@ popular_names <- all_babies %>%
   #filter(pct_girls>=0.25, pct_girls<=0.75)%>%
   group_by(name)%>%
   summarize(
-    #avg_pct_girls = mean(pct_girls),
+    avg_pct_girls = mean(pct_girls),
     num_years = n(),
-    N = sum(F+M)
+    total_occurences = sum(F+M)
   ) %>%
-  filter(num_years >= 70) %>%
+  #filter(num_years >= 70) %>%
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
-  arrange(desc(N))#%>%
+  arrange(desc(num_occurences))#%>%
  #head(1000)
 
 pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
 
-top_rmse<- pop_rmse %>%
+most_unisex_names <- pop_rmse %>%
 #  head(1000)%>%
   group_by(name)%>%
   group_modify(~rmse(.x))%>%
@@ -265,6 +268,19 @@ top_rmse<- pop_rmse %>%
 
 ### Step 2D: Gather the data you need to draw the time series
 ```{r, eval = FALSE}
+# use pipeline from step 1A and join to our top unisex names 
+data <- babynames %>%
+  filter(
+    year >= 1930 & year < 2012
+  ) %>%
+  select(-prop) %>%
+  pivot_wider(names_from = sex, values_from = n) %>%
+  mutate(pct_girls = F / (F + M)) %>%
+  inner_join(most_unisex_names, by = c("name" = "name"))
+dim(data)
+
+# dimensions not 35n, probably because some names are missing in certain years?
+
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
   all_babies %>%
