@@ -250,7 +250,7 @@ popular_names <- all_babies %>%
     total_years = n(),
     total_occurences = sum(F+M)
   ) %>%
-  #filter(total_years >= 70) %>%
+  filter(total_years >= 70) %>%
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
   arrange(desc(total_occurences))%>%
  head(1000)
@@ -283,7 +283,7 @@ dim(data)
 # dimensions not 35n, probably because some names are missing in certain years?
 ```
 
-```{r}
+```{r, eval = FALSE}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
   all_babies %>%
@@ -320,13 +320,6 @@ Goal: generalize the pattern you used in Step 1B to compute the most unisex year
 should end up with a data frame with 35 rows.
 
 ```{r}
-# from 1B
-jessie_unisex_year <- jessie %>%
-  mutate(distance = abs(pct_girls - 0.5)) %>%
-  arrange(distance) %>%
-  head(1)
-jessie_unisex_year
-
 # write a function
 most_unisex_yr <- function(name_arg) {
   all_babies %>%
@@ -348,12 +341,60 @@ Step 2F: Polish the data
 ### Step 2F: Polish the data
 
 ### Step 2G: Create the annotations
+-  need labels for Marion, Jackie, Ariel, Jamie
+-  as of now only Marion is in our filtered list of names
+```{r}
+```
+
 
 > Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
 
 ### Step 2H: Order the facets
 
+
 ### Step 2I: Draw the plot
+
+definitely not finished yet!
+
+```{r}
+ggplot(data, aes(x = year, y = pct_girls)) +
+  geom_line() +
+  geom_area(fill = "#eaac9e") +
+  facet_wrap(~name) +
+  geom_point(data = unisex_years, fill = "white", pch = 21, size = 3) +
+  geom_path(data = jessie_segments) +
+  geom_text(
+    data = jessie_labels, 
+    aes(label = label), 
+    color = "white"
+  ) +
+  geom_text(
+    data = jessie_context, family = "Century Gothic",
+    aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
+  ) +
+  scale_y_continuous(NULL, 
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1),
+    labels = scales::percent
+  ) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
+  scale_fill_manual(values = c("#eaac9e", "black")) +
+  theme(
+    panel.background = element_rect(fill = "#92bdd3"),
+    axis.ticks.y = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    text = element_text(family = "Century Gothic"),
+    strip.background = element_blank(),
+    strip.text = element_text(hjust = 0, face = "bold", size = 14)
+  ) +
+  guides(fill = FALSE) +
+  labs(
+    title = "1. Jessie", 
+    caption = "Source: Social Security Administration | By http://flowingdata.com"
+  )
+```
+
 
 ## Word count
 
