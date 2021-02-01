@@ -361,6 +361,7 @@ names_list <- most_unisex_names %>%
   select(-mse, -rmse) %>%
   deframe()
 unisex_years <- map_dfr(names_list, most_unisex_yr)
+
 unisex_years
 ```
 
