@@ -263,7 +263,7 @@ most_unisex_names <- pop_rmse %>%
   group_by(name)%>%
   group_modify(~rmse(.x))%>%
   arrange((rmse))%>%
- head(35)
+  head(35)
 ```
 
 
@@ -299,7 +299,7 @@ rmse_all <- function(name_arg) {
 }
 
 rmse_all("Jessie")
-map(fd_names, rmse_all)
+
 map_dfr(c(
   "Jessie", "Marion", "Jackie", "Alva", "Ollie",
   "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
@@ -355,8 +355,6 @@ names_list <- most_unisex_names %>%
 unisex_years <- map_dfr(names_list, most_unisex_yr)
 ```
 
-
-Step 2F: Polish the data
 ### Step 2F: Polish the data
 
 ### Step 2G: Create the annotations
@@ -425,10 +423,10 @@ text_stats()
 
 In this assignment, we attempted the following [standards](https://beanumber.github.io/sds192/standards.html):
 
-- `r standard_button("wrangling")`: We met the Wrangling standard because we...
-- `r standard_button("relational")`: We met the Relational standard because we...
+- `r standard_button("wrangling")`: We met the Wrangling standard because we utilized functions such as group_by() and group_modify()
+- `r standard_button("relational")`: We met the Relational standard because we utilized the inner_join function to include potentially missing data and merge various data frames.
 - `r standard_button("reshape")`: We met the Reshape standard because we...
-- `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we...
-- `r standard_button("markdown")`: We mastered the R Markdown standard because we...
+- `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we customized and utilized a wide range of available geoms and color palettes, along with specific labeling of the graphic. 
+- `r standard_button("markdown")`: We mastered the R Markdown standard because we employed formatting within the Markdown file to incllude a variety of code chunks, text, and graphics. 
 
 ## References
