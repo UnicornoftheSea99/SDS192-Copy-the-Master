@@ -371,6 +371,7 @@ unisex_years
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
+
 ```
 
 
@@ -383,6 +384,8 @@ unisex_years
 most_unisex_names <- most_unisex_names %>%
   mutate(name_rank = dense_rank(rmse))
 most_unisex_names
+#most_unisex_names <- most_unisex_names %>%
+  #mutate(name_rank = dense_rank(rmse))
 ```
 
 ### Step 2I: Draw the plot
