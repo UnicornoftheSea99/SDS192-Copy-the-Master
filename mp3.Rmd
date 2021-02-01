@@ -351,6 +351,12 @@ Step 2F: Polish the data
 
 ### Step 2H: Order the facets
 
+```{r}
+#all ranks 1,  convert rmse to a factor first? 
+most_unisex_names <- most_unisex_names %>%
+  mutate(name_rank = dense_rank(rmse))
+
+```
 
 ### Step 2I: Draw the plot
 
