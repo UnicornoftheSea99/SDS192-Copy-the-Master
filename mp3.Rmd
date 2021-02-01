@@ -225,8 +225,6 @@ rmse <- function(x) {
 #   group_by(name) %>%
 #   group_modify(~rmse(.x))
 
-
-  
 ```
 
 ```{r, eval=FALSE}
@@ -277,7 +275,7 @@ rmse_all <- function(name_arg) {
 
 rmse_all("Jessie")
 map(fd_names, rmse_all)
-map(c(
+map_dfr(c(
   "Jessie", "Marion", "Jackie", "Alva", "Ollie",
   "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
   "Carey", "Tommie", "Angel", "Hollis", "Sammie",
@@ -286,6 +284,7 @@ map(c(
   "Devon", "Cruz", "Michel", "Gale", "Robin",
   "Dorian", "Casey", "Dana", "Kim", "Shannon"
 ), rmse_all)
+
 #map2_dfr(c("Benjamin", "Cory"), rmse_all)
 ```
 
