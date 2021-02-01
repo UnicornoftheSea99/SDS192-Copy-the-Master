@@ -349,6 +349,7 @@ Step 2F: Polish the data
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
+
 ```
 
 
@@ -358,8 +359,8 @@ Step 2F: Polish the data
 
 ```{r}
 #all ranks 1,  convert rmse to a factor first? 
-most_unisex_names <- most_unisex_names %>%
-  mutate(name_rank = dense_rank(rmse))
+#most_unisex_names <- most_unisex_names %>%
+  #mutate(name_rank = dense_rank(rmse))
 
 ```
 
