@@ -184,9 +184,19 @@ all_babies <- babynames %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
    mutate(
+<<<<<<< HEAD
     pct_girls = F / (F + M)
+=======
+    #F = replace_na(F,0),
+    #M = replace_na(M,0), 
+  pct_girls = F / (F + M)
+>>>>>>> 47b7ff88a053e51a40382cf04046066a62bcb4ac
    )%>%
-  filter(!is.na(F),!is.na(M))
+  #filter(!is.na(F), !is.na(M)) 
+  #filter(!is.na(F) | !is.na(M))
+  filter(!is.na(F) & !is.na(M)) 
+
+# something is weird w/ the way we filtered out NAs, because  I found some in stuff we created later
   
 ```
 
@@ -237,26 +247,49 @@ all_babies %>%
 ```{r}
 #finds 1000 most popular names
 popular_names <- all_babies %>%
-  filter(pct_girls>=0.3, pct_girls<=0.7)%>%
+  #filter(pct_girls>=0.25, pct_girls<=0.75)%>%
   group_by(name)%>%
   summarize(
-    N = sum(F+M)
-  )%>%
-  arrange(desc(N))%>%
+    #avg_pct_girls = mean(pct_girls),
+    total_years = n(),
+    total_occurences = sum(F+M)
+  ) %>%
+  filter(total_years >= 70) %>%
+  #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
+  arrange(desc(total_occurences))%>%
  head(1000)
 
 pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
 
-top_rmse<- pop_rmse %>%
+
+
+
+most_unisex_names <- pop_rmse %>%
+#  head(1000)%>%
   group_by(name)%>%
   group_modify(~rmse(.x))%>%
-  arrange(desc(rmse))%>%
+  arrange((rmse))%>%
  head(35)
 ```
 
 
 ### Step 2D: Gather the data you need to draw the time series
+```{r, eval = FALSE}
+# use pipeline from step 1A and join to our top unisex names 
+data <- babynames %>%
+  filter(
+    year >= 1930 & year < 2012
+  ) %>%
+  select(-prop) %>%
+  pivot_wider(names_from = sex, values_from = n) %>%
+  mutate(pct_girls = F / (F + M)) %>%
+  inner_join(most_unisex_names, by = c("name" = "name"))
+dim(data)
+
+# dimensions not 35n, probably because some names are missing in certain years?
+```
+
 ```{r, eval = FALSE}
 # write a function to compute RMSE
 rmse_all <- function(name_arg) {
@@ -289,16 +322,92 @@ rmse_all <- function(name_arg) {
 ```
 
 ### Step 2E: Gather the data you need to draw the points
+Goal: generalize the pattern you used in Step 1B to compute the most unisex year for each of the 35 names. Again, you can do this by either mapping a function or by joining.
 
+should end up with a data frame with 35 rows.
+
+```{r}
+# write a function
+most_unisex_yr <- function(name_arg) {
+  all_babies %>%
+    filter(name == name_arg) %>%
+    mutate(distance = abs(pct_girls - 0.5)) %>%
+    arrange(distance) %>%
+    head(1)
+}
+
+# use it
+names_list <- most_unisex_names %>% 
+  select(-mse, -rmse) %>%
+  deframe()
+unisex_years <- map_dfr(names_list, most_unisex_yr)
+```
+
+
+Step 2F: Polish the data
 ### Step 2F: Polish the data
 
 ### Step 2G: Create the annotations
+-  need labels for Marion, Jackie, Ariel, Jamie
+-  as of now only Marion is in our filtered list of names
+```{r}
+```
+
 
 > Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
 
 ### Step 2H: Order the facets
 
+```{r}
+#all ranks 1,  convert rmse to a factor first? 
+most_unisex_names <- most_unisex_names %>%
+  mutate(name_rank = dense_rank(rmse))
+
+```
+
 ### Step 2I: Draw the plot
+
+definitely not finished yet!
+
+```{r}
+ggplot(data, aes(x = year, y = pct_girls)) +
+  geom_line() +
+  geom_area(fill = "#eaac9e") +
+  facet_wrap(~name) +
+  geom_point(data = unisex_years, fill = "white", pch = 21, size = 3) +
+  geom_path(data = jessie_segments) +
+  geom_text(
+    data = jessie_labels, 
+    aes(label = label), 
+    color = "white"
+  ) +
+  geom_text(
+    data = jessie_context, family = "Century Gothic",
+    aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
+  ) +
+  scale_y_continuous(NULL, 
+    limits = c(0, 1),
+    breaks = c(0, 0.5, 1),
+    labels = scales::percent
+  ) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
+  scale_fill_manual(values = c("#eaac9e", "black")) +
+  theme(
+    panel.background = element_rect(fill = "#92bdd3"),
+    axis.ticks.y = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    text = element_text(family = "Century Gothic"),
+    strip.background = element_blank(),
+    strip.text = element_text(hjust = 0, face = "bold", size = 14)
+  ) +
+  guides(fill = FALSE) +
+  labs(
+    title = "1. Jessie", 
+    caption = "Source: Social Security Administration | By http://flowingdata.com"
+  )
+```
+
 
 ## Word count
 
