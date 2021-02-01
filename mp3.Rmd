@@ -116,9 +116,13 @@ ggplot(jessie, aes(x = year, y = pct_girls)) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
     breaks = c(0, 0.5, 1),
-    labels = scales::percent
+    labels = scales::percent, 
+    expand = c(0,0)
   ) +
-  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
+                     labels = c("1940", "'60", "'80", "2000"), 
+                     expand = c(0,0), 
+                     NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
@@ -186,9 +190,11 @@ all_babies <- babynames %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
    mutate(
+
     #F = replace_na(F,0),
     #M = replace_na(M,0), 
   pct_girls = F / (F + M)
+
    )%>%
   #filter(!is.na(F), !is.na(M)) 
   #filter(!is.na(F) | !is.na(M))
@@ -264,11 +270,13 @@ most_unisex_names <- pop_rmse %>%
   group_modify(~rmse(.x))%>%
   arrange((rmse))%>%
   head(35)
+
+view(most_unisex_names)
 ```
 
 
 ### Step 2D: Gather the data you need to draw the time series
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # use pipeline from step 1A and join to our top unisex names 
 data <- babynames %>%
   filter(
@@ -353,6 +361,7 @@ names_list <- most_unisex_names %>%
   select(-mse, -rmse) %>%
   deframe()
 unisex_years <- map_dfr(names_list, most_unisex_yr)
+unisex_years
 ```
 
 ### Step 2F: Polish the data
@@ -368,6 +377,12 @@ unisex_years <- map_dfr(names_list, most_unisex_yr)
 
 ### Step 2H: Order the facets
 
+```{r}
+#all ranks 1,  convert rmse to a factor first? 
+most_unisex_names <- most_unisex_names %>%
+  mutate(name_rank = dense_rank(rmse))
+most_unisex_names
+```
 
 ### Step 2I: Draw the plot
 
