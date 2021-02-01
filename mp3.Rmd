@@ -184,9 +184,7 @@ all_babies <- babynames %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
    mutate(
-  #   F = replace_na(F,0),
-  #   M = replace_na(M,0)
-  pct_girls = F / (F + M)
+    pct_girls = F / (F + M)
    )%>%
   filter(!is.na(F),!is.na(M))
   
@@ -251,7 +249,6 @@ pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
 
 top_rmse<- pop_rmse %>%
-#  head(1000)%>%
   group_by(name)%>%
   group_modify(~rmse(.x))%>%
   arrange(desc(rmse))%>%
