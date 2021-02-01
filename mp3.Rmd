@@ -6,6 +6,8 @@ author:
   affiliation: Smith College
 - name: Julia Walker
   affiliation: Smith College
+- name: Kitty Chen
+  affiliation: Smith College
 date: "`r format(Sys.Date(), '%B %e, %Y')`"
 output: 
   html_document:
@@ -114,16 +116,20 @@ ggplot(jessie, aes(x = year, y = pct_girls)) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
     breaks = c(0, 0.5, 1),
-    labels = scales::percent
+    labels = scales::percent, 
+    expand = c(0,0)
   ) +
-  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
+                     labels = c("1940", "'60", "'80", "2000"), 
+                     expand = c(0,0), 
+                     NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
     axis.ticks.y = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    text = element_text(family = "Century Gothic"),
+#    text = element_text(family = "Century Gothic"),
     strip.background = element_blank(),
     strip.text = element_text(hjust = 0, face = "bold", size = 14)
   ) +
@@ -228,8 +234,6 @@ rmse <- function(x) {
 #   group_by(name) %>%
 #   group_modify(~rmse(.x))
 
-
-  
 ```
 
 ```{r, eval=FALSE}
@@ -258,20 +262,19 @@ popular_names <- all_babies %>%
 pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
 
-
-
-
 most_unisex_names <- pop_rmse %>%
 #  head(1000)%>%
   group_by(name)%>%
   group_modify(~rmse(.x))%>%
   arrange((rmse))%>%
- head(35)
+  head(35)
+
+view(most_unisex_names)
 ```
 
 
 ### Step 2D: Gather the data you need to draw the time series
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 # use pipeline from step 1A and join to our top unisex names 
 data <- babynames %>%
   filter(
@@ -301,6 +304,23 @@ rmse_all <- function(name_arg) {
   )
 }
 
+rmse_all("Jessie")
+
+map_dfr(c(
+  "Jessie", "Marion", "Jackie", "Alva", "Ollie",
+  "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
+  "Carey", "Tommie", "Angel", "Hollis", "Sammie",
+  "Jamie", "Kris", "Robbie", "Tracy", "Merrill",
+  "Noel", "Rene", "Johnnie", "Ariel", "Jan",
+  "Devon", "Cruz", "Michel", "Gale", "Robin",
+  "Dorian", "Casey", "Dana", "Kim", "Shannon"
+), rmse_all)
+
+#map2_dfr(c("Benjamin", "Cory"), rmse_all)
+```
+
+
+```{r}
 #CHECKING THAT IT WORKS, IT DOES!!
 #rmse_all("Jessie")
 
@@ -315,6 +335,8 @@ rmse_all <- function(name_arg) {
 # ), rmse_all)
 
 #will use map_dfr to apply to all names
+```
+
 ```
 
 ### Step 2E: Gather the data you need to draw the points
@@ -337,10 +359,10 @@ names_list <- most_unisex_names %>%
   select(-mse, -rmse) %>%
   deframe()
 unisex_years <- map_dfr(names_list, most_unisex_yr)
+
+unisex_years
 ```
 
-
-Step 2F: Polish the data
 ### Step 2F: Polish the data
 
 ### Step 2G: Create the annotations
@@ -357,9 +379,11 @@ Step 2F: Polish the data
 
 ```{r}
 #all ranks 1,  convert rmse to a factor first? 
+most_unisex_names <- most_unisex_names %>%
+  mutate(name_rank = dense_rank(rmse))
+most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
-
 ```
 
 ### Step 2I: Draw the plot
@@ -416,10 +440,10 @@ text_stats()
 
 In this assignment, we attempted the following [standards](https://beanumber.github.io/sds192/standards.html):
 
-- `r standard_button("wrangling")`: We met the Wrangling standard because we...
-- `r standard_button("relational")`: We met the Relational standard because we...
+- `r standard_button("wrangling")`: We met the Wrangling standard because we utilized functions such as group_by() and group_modify()
+- `r standard_button("relational")`: We met the Relational standard because we utilized the inner_join function to include potentially missing data and merge various data frames.
 - `r standard_button("reshape")`: We met the Reshape standard because we...
-- `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we...
-- `r standard_button("markdown")`: We mastered the R Markdown standard because we...
+- `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we customized and utilized a wide range of available geoms and color palettes, along with specific labeling of the graphic. 
+- `r standard_button("markdown")`: We mastered the R Markdown standard because we employed formatting within the Markdown file to incllude a variety of code chunks, text, and graphics. 
 
 ## References
