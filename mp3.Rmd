@@ -184,13 +184,11 @@ all_babies <- babynames %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
    mutate(
-<<<<<<< HEAD
-    pct_girls = F / (F + M)
-=======
+
     #F = replace_na(F,0),
     #M = replace_na(M,0), 
   pct_girls = F / (F + M)
->>>>>>> 47b7ff88a053e51a40382cf04046066a62bcb4ac
+
    )%>%
   #filter(!is.na(F), !is.na(M)) 
   #filter(!is.na(F) | !is.na(M))
