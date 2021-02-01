@@ -321,6 +321,26 @@ unisex_years
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
+marion <- babynames %>%
+  filter(
+    name == "Marion", 
+    year >= 1930 & year < 2012
+  ) %>%
+  select(-prop) %>%
+  pivot_wider(names_from = sex, values_from = n) %>%
+  mutate(pct_girls = F / (F + M))
+marion
+
+marion_unisex_year <- marion %>%
+  mutate(distance = abs(pct_girls - 0.5)) %>%
+  arrange(distance) %>%
+  head(1)
+jessie_unisex_year
+
+marion_context <- tribble(
+  ~year_label, ~vpos, ~hjust, ~name, ~text,
+  1934, 0.35, "left", "Marion", "Most\nunisex year"
+)
 
 ```
 
@@ -339,7 +359,6 @@ most_unisex_names
 ```
 
 ### Step 2I: Draw the plot
-
 definitely not finished yet!
 
 ```{r}
