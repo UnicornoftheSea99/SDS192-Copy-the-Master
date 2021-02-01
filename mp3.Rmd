@@ -189,7 +189,8 @@ all_babies <- babynames %>%
   pct_girls = F / (F + M)
    )%>%
   #filter(!is.na(F), !is.na(M)) 
-  filter(!is.na(F) | !is.na(M))
+  #filter(!is.na(F) | !is.na(M))
+  filter(!is.na(F) & !is.na(M)) 
 
 # something is weird w/ the way we filtered out NAs, because  I found some in stuff we created later
   
@@ -251,7 +252,7 @@ popular_names <- all_babies %>%
   ) %>%
   #filter(total_years >= 70) %>%
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
-  arrange(desc(total_occurences))#%>%
+  arrange(desc(total_occurences))%>%
  head(1000)
 
 pop_rmse <- all_babies%>%
@@ -325,6 +326,21 @@ jessie_unisex_year <- jessie %>%
   arrange(distance) %>%
   head(1)
 jessie_unisex_year
+
+# write a function
+most_unisex_yr <- function(name_arg) {
+  all_babies %>%
+    filter(name == name_arg) %>%
+    mutate(distance = abs(pct_girls - 0.5)) %>%
+    arrange(distance) %>%
+    head(1)
+}
+
+# use it
+names_list <- most_unisex_names %>% 
+  select(-mse, -rmse) %>%
+  deframe()
+unisex_years <- map_dfr(names_list, most_unisex_yr)
 ```
 
 
