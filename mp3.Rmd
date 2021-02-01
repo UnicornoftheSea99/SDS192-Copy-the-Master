@@ -288,37 +288,6 @@ dim(data)
 # dimensions not 35n, probably because some names are missing in certain years?
 ```
 
-```{r, eval = FALSE}
-# write a function to compute RMSE
-rmse_all <- function(name_arg) {
-  all_babies %>%
-    filter(name == name_arg) %>%
-     mutate(
-       pct_girls = F / (F + M),
-       error = pct_girls - 0.5,
-       squared_error = error^2) %>%
-  summarize(
-    mse = mean(squared_error),
-    rmse = sqrt(mse)
-  )
-}
-
-#CHECKING THAT IT WORKS, IT DOES!!
-#rmse_all("Jessie")
-
-# map(c(
-#   "Jessie", "Marion", "Jackie", "Alva", "Ollie",
-#   "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
-#   "Carey", "Tommie", "Angel", "Hollis", "Sammie",
-#   "Jamie", "Kris", "Robbie", "Tracy", "Merrill",
-#   "Noel", "Rene", "Johnnie", "Ariel", "Jan",
-#   "Devon", "Cruz", "Michel", "Gale", "Robin",
-#   "Dorian", "Casey", "Dana", "Kim", "Shannon"
-# ), rmse_all)
-
-#will use map_dfr to apply to all names
-```
-
 ### Step 2E: Gather the data you need to draw the points
 Goal: generalize the pattern you used in Step 1B to compute the most unisex year for each of the 35 names. Again, you can do this by either mapping a function or by joining.
 
