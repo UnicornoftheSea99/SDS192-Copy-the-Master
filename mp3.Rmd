@@ -190,8 +190,6 @@ all_babies <- babynames %>%
   pct_girls = F / (F + M)
 
    )%>%
-  #filter(!is.na(F), !is.na(M)) 
-  #filter(!is.na(F) | !is.na(M))
   filter(!is.na(F) & !is.na(M)) 
 
 # something is weird w/ the way we filtered out NAs, because  I found some in stuff we created later
