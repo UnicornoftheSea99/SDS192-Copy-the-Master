@@ -322,8 +322,6 @@ general_context <- tribble(
   1936, 0.35, "top", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
 )
 
-general_context
-
 general_segments <- tribble(
   ~year, ~pct_girls, ~name, 
   1940, 0.43, "Jessie",
@@ -342,8 +340,6 @@ general_segments <- tribble(
   1936, 0.5, "Jamie",
   1936, 0.5, "Jamie"
 )
-
-general_segments
 ```
 
 > Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
@@ -363,20 +359,6 @@ ranked_names
 #most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
-```
-
-Kitty scratch work attempt #2 
-```{r}
-ranked_names <- most_unisex_names %>%
-  inner_join(fd_names, by = c("name" = "name")) %>% 
-  mutate(
-        fct_rmse = factor(rmse),
-         #name_rank = min_rank(fct_rmse), 
-        name_rank= dense_rank(fct_rmse),
-         name_label = paste(fd_rank, name, sep = ". ")
-    )
-fd_names
-ranked_names
 ```
 
 ### Step 2I: Draw the plot
@@ -442,9 +424,9 @@ text_stats()
 
 In this assignment, we attempted the following [standards](https://beanumber.github.io/sds192/standards.html):
 
-- `r standard_button("wrangling")`: We met the Wrangling standard because we utilized functions such as group_by() and group_modify(), as well as mutate to optimize the code for readability and performance. 
-- `r standard_button("relational")`: We met the Relational standard because we utilized the inner_join function to include potentially missing data and merge various data frames.
-- `r standard_button("reshape")`: We met the Reshape standard because we transformed the various data frames with pivot functions for the lists. 
+- `r standard_button("wrangling")`: We mastered the Wrangling standard because we utilized functions such as group_by() and group_modify(), as well as mutate to optimize the code for readability and performance. 
+- `r standard_button("relational")`: We mastered the Relational standard because we utilized the inner_join function to include potentially missing data and merge various data frames.
+- `r standard_button("reshape")`: We mastered the Reshape standard because we transformed the various data frames with pivot functions for the lists. 
 - `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we customized and utilized a wide range of available geoms and color palettes, along with specific labeling of the graphic. 
 - `r standard_button("markdown")`: We mastered the R Markdown standard because we employed formatting within the Markdown file to incllude a variety of code chunks, text, and graphics. 
 
