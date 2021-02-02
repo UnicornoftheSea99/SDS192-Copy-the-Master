@@ -254,8 +254,7 @@ popular_names <- all_babies %>%
     total_years = n(),
     total_occurences = sum(F+M)
   ) %>%
-  filter(total_years >= 70) %>%
-  filter(name != "Unknown")
+  filter(total_years >= 70 & name != "Unknown")%>%
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
   arrange(desc(total_occurences))%>%
  head(1000)
@@ -388,7 +387,7 @@ ranked_names
 ggplot(data, aes(x = year, y = pct_girls)) +
   geom_line() +
   geom_area(fill = "#eaac9e") +
-  facet_wrap(~name) +
+  facet_wrap(~name, scales='free_x', ncol = 7) +
   geom_point(data = unisex_years, fill = "white", pch = 21, size = 3) +
   geom_path(data = jessie_segments) +
   geom_text(
@@ -427,7 +426,7 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   ) +
   guides(fill = FALSE) +
   labs(
-    title = "1. Jessie", 
+    #title = "Most Unisex Names", 
     caption = "Source: Social Security Administration | By http://flowingdata.com"
   )
 ```
@@ -435,7 +434,7 @@ ggplot(data, aes(x = year, y = pct_girls)) +
 
 ## Word count
 
-```{r word_count, message=FALSE, echo=FALSE}
+```{r word_count, message=FALSE, echo=FALSE, eval=FALSE}
 text_stats()
 ```
 
