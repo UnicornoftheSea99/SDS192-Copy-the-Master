@@ -241,8 +241,6 @@ most_unisex_names <- pop_rmse %>%
   group_modify(~find_rmse(.x))%>%
   arrange((rmse))%>%
   head(35)
-
-view(most_unisex_names)
 ```
 
 
@@ -283,7 +281,7 @@ names_list <- most_unisex_names %>%
   
 unisex_years <- map_dfr(names_list, most_unisex_yr) 
 
-view(unisex_years)
+unisex_years
 ```
 
 ### Step 2F: Polish the data
@@ -306,7 +304,7 @@ names_list <- most_unisex_names %>%
   
 unisex_years <- map_dfr(names_list, most_unisex_yr) 
 
-view(unisex_years)
+unisex_years
 ```
 
 ### Step 2G: Create the annotations
