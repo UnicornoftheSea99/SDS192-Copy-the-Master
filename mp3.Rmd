@@ -230,15 +230,12 @@ all_babies %>%
 ```{r}
 #finds 1000 most popular names
 popular_names <- all_babies %>%
-  #filter(pct_girls>=0.25, pct_girls<=0.75)%>%
   group_by(name)%>%
   summarize(
-    #avg_pct_girls = mean(pct_girls),
     total_years = n(),
     total_occurences = sum(F+M)
   ) %>%
   filter(total_years >= 70 & name != "Unknown")%>%
-  #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
   arrange(desc(total_occurences))%>%
  head(1000)
 
@@ -246,7 +243,6 @@ pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
 
 most_unisex_names <- pop_rmse %>%
-#  head(1000)%>%
   group_by(name)%>%
   group_modify(~find_rmse(.x))%>%
   arrange((rmse))%>%
@@ -269,9 +265,6 @@ dim(data)
 ```
 
 ### Step 2E: Gather the data you need to draw the points
-Goal: generalize the pattern you used in Step 1B to compute the most unisex year for each of the 35 names. Again, you can do this by either mapping a function or by joining.
-
-
 ```{r}
 most_unisex_yr <- function(name_arg) {
   all_babies %>%
@@ -314,7 +307,6 @@ unisex_years
 ```
 
 ### Step 2G: Create the annotations
-
 ```{r}
 map_dfr(c("Jessie", "Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
 
@@ -347,22 +339,16 @@ general_segments <- tribble(
 )
 ```
 
-> Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
-
 ### Step 2H: Order the facets
-
 ```{r}
 ranked_names <- most_unisex_names %>%
   mutate(
         fct_rmse = factor(rmse),
         name_rank= dense_rank(fct_rmse),
     )
-
 ranked_names
 
 ```
-
-
 
 ```{r}
 ranked_names <- most_unisex_names %>%
@@ -378,7 +364,6 @@ ranked_names
 
 
 ### Step 2I: Draw the plot
-
 ```{r}
 ggplot(data, aes(x = year, y = pct_girls)) +
   geom_line() +
