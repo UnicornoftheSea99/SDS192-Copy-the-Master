@@ -318,10 +318,10 @@ map_dfr(c("Jessie", "Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
 general_context <- tribble(
   ~year_label, ~vpos, ~hjust, ~name, ~text,
   1934, 0.35, "left", "Jessie", "Most\nunisex year",
-  1977, 0.35, "left", "Marion", "Marion Jones wins\ngold in Olympics", 
-  2006, 0.35, "right", "Jackie", "Jackie Robinson to\nmajor league", 
-  1930, 0.35, "left", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
-  1936, 0.35, "left", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
+  1977, 0.35, "top", "Marion", "Marion Jones wins\ngold in Olympics", 
+  2006, 0.35, "top", "Jackie", "Jackie Robinson to\nmajor league", 
+  1930, 0.35, "top", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
+  1936, 0.35, "top", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
 )
 
 general_context
@@ -331,16 +331,16 @@ general_segments <- tribble(
   1940, 0.43, "Jessie",
   1940, 0.5, "Jessie",
   1949, 0.4956897, "Jessie",
-  1930, 0.43, "Marion",
-  1930, 0.5, "Marion", 
-  1934, 0.5, "Marion", 
-  2000, 0.43, "Jackie",
-  2000, 0.498, "Jackie",
+  1940, 0.23, "Marion",
+  1940, 0.5, "Marion", 
+  1977, 0.5, "Marion", 
+  1980, 0.33, "Jackie",
+  1980, 0.498, "Jackie",
   2006, 0.498, "Jackie",
-  1923, 0.43, "Ariel",
+  1923, 0.23, "Ariel",
   1923, 0.498, "Ariel",
   1930, 0.498, "Ariel",
-  1928, 0.43, "Jamie", 
+  1928, 0.23, "Jamie", 
   1936, 0.5, "Jamie",
   1936, 0.5, "Jamie"
 )
@@ -373,18 +373,17 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   geom_line() +
   geom_area(fill = "#eaac9e") +
   facet_wrap(~name, scales='free_x', ncol = 7) +
-  geom_point(data = unisex_years, fill = "white", pch = 21, size = 3) +
-  geom_path(data = jessie_segments) +
-  geom_path(data = general_segments) +
+  geom_point(data = unisex_years, fill = "white", pch = 21, size = 2.8) +
+  #geom_path(data = jessie_segments) +
+  #geom_text(
+  #  data = jessie_context, family = "Century Gothic",
+  #  aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
+  #) +
   geom_text(
     data = jessie_labels, 
     aes(label = label), 
     color = "white"
   ) +
-  #geom_text(
-  #  data = jessie_context, family = "Century Gothic",
-  #  aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
-  #) +
   geom_text(
   data = general_context, family = "Century Gothic",
     aes(x = year_label, y = vpos, label = text, hjust = hjust), 
@@ -396,10 +395,12 @@ ggplot(data, aes(x = year, y = pct_girls)) +
     labels = scales::percent,
     expand = c(0,0)
   ) +
+    geom_path(data = general_segments, aes(x = year, y = pct_girls)) +
   scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
                      labels = c("1940", "'60", "'80", "2000"), 
                      expand = c(0,0),
-                     NULL) +
+                     NULL
+                     ) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
@@ -408,7 +409,7 @@ ggplot(data, aes(x = year, y = pct_girls)) +
     panel.grid.minor = element_blank(),
     #text = element_text(family = "Century Gothic"),
     strip.background = element_blank(),
-    strip.text = element_text(hjust = 0, face = "bold", size = 10)
+    strip.text = element_text(hjust = 0, face = "bold", size = 14)
   ) +
   guides(fill = FALSE) +
   labs(
