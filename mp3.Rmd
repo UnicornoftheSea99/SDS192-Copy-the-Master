@@ -362,7 +362,6 @@ ranked_names
 ```
 
 
-
 ```{r}
 ranked_names <- most_unisex_names %>%
   inner_join(fd_names, by = c("name" = "name")) %>% 
