@@ -277,7 +277,6 @@ most_unisex_yr <- function(name_arg) {
     head(1)
 }
 
-# use it
 names_list <- most_unisex_names %>% 
   select(-mse, -rmse) %>%
   deframe()
@@ -333,16 +332,19 @@ general_context <- tribble(
 
 ```{r}
 ranked_names <- most_unisex_names %>%
-  mutate(fct_rmse = factor(rmse),
-         name_rank = min_rank(fct_rmse), 
-         name_label = paste(name_rank, name, sep = ". "))
+  mutate(
+      #fct_rmse = factor(rmse),
+         #name_rank = min_rank(fct_rmse), 
+         #name_rank = dense_rank(fct_rmse),
+         name_rank = dense_rank(rmse),
+         #name_label = paste(name_rank, name, sep = ". ")
+         )
 #most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
 ```
 
 ### Step 2I: Draw the plot
-definitely not finished yet!
 
 ```{r}
 ggplot(data, aes(x = year, y = pct_girls)) +
