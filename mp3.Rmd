@@ -292,10 +292,9 @@ unisex_years
 
 ### Step 2F: Polish the data
 ```{r}
-# remove unknown 
+
 all_babies <- all_babies %>% filter(name != "Unknown")
 
-#repeat from above 
 most_unisex_yr <- function(name_arg) {
   all_babies %>%
     filter(name == name_arg) %>%
@@ -436,7 +435,7 @@ In this assignment, we attempted the following [standards](https://beanumber.git
 - `r standard_button("relational")`: We mastered the Relational standard because we utilized the inner_join function to include potentially missing data and merge various data frames.
 - `r standard_button("reshape")`: We mastered the Reshape standard because we transformed the various data frames with pivot functions for the lists. 
 - `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we customized and utilized a wide range of available geoms and color palettes, along with specific labeling of the graphic. 
-- `r standard_button("markdown")`: We mastered the R Markdown standard because we employed formatting within the Markdown file to incllude a variety of code chunks, text, and graphics. 
+- `r standard_button("markdown")`: We mastered the R Markdown standard because we employed formatting within the Markdown file to include a variety of code chunks, text, and graphics. 
 
 ## References
 -http://flowingdata.com
