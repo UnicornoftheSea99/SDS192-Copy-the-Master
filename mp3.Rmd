@@ -316,9 +316,9 @@ map_dfr(c("Jessie", "Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
 general_context <- tribble(
   ~year_label, ~vpos, ~hjust, ~name, ~text,
   1934, 0.35, "left", "Jessie", "Most\nunisex year",
-  1977, 0.35, "top", "Marion", "Marion Jones wins\ngold in Olympics", 
+  1977, 0.35, "right", "Marion", "Marion Jones wins\ngold in Olympics", 
   2006, 0.35, "top", "Jackie", "Jackie Robinson to\nmajor league", 
-  1930, 0.35, "top", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
+  1930, 0.35, "right", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
   1936, 0.35, "top", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
 )
 
@@ -385,7 +385,7 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   geom_text(
   data = general_context, family = "Century Gothic",
     aes(x = year_label, y = vpos, label = text, hjust = hjust), 
-    vjust = "top"
+    vjust = "top",size=2
   ) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
