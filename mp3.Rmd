@@ -238,7 +238,7 @@ pop_rmse <- all_babies%>%
 most_unisex_names <- pop_rmse %>%
 #  head(1000)%>%
   group_by(name)%>%
-  group_modify(~rmse(.x))%>%
+  group_modify(~find_rmse(.x))%>%
   arrange((rmse))%>%
   head(35)
 
