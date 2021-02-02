@@ -257,6 +257,7 @@ popular_names <- all_babies %>%
     total_occurences = sum(F+M)
   ) %>%
   filter(total_years >= 70) %>%
+  filter(name != "Unknown")
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
   arrange(desc(total_occurences))%>%
  head(1000)
@@ -350,10 +351,11 @@ marion_context <- tribble(
 ### Step 2H: Order the facets
 
 ```{r}
-#all ranks 1,  convert rmse to a factor first? 
-most_unisex_names <- most_unisex_names %>%
-  mutate(name_rank = dense_rank(rmse))
-most_unisex_names
+ranked_names <- most_unisex_names %>%
+  mutate(fct_rmse = factor(rmse),
+         name_rank = min_rank(fct_rmse), 
+         name_label = paste(name_rank, name, sep = ". "))
+#most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
 ```
