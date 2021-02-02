@@ -238,15 +238,18 @@ popular_names <- all_babies %>%
   filter(total_years >= 70 & name != "Unknown")%>%
   arrange(desc(total_occurences))%>%
  head(1000)
+popular_names
 
 pop_rmse <- all_babies%>%
   inner_join(popular_names, by = "name")
+pop_rmse
 
 most_unisex_names <- pop_rmse %>%
   group_by(name)%>%
   group_modify(~find_rmse(.x))%>%
   arrange((rmse))%>%
   head(35)
+most_unisex_names
 ```
 
 
