@@ -341,13 +341,16 @@ view(unisex_years)
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
-marion_unisex_year <- most_unisex_yr("Marion")
+map_dfr(c("Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
 
-marion_context <- tribble(
+general_context <- tribble(
   ~year_label, ~vpos, ~hjust, ~name, ~text,
-  1977, 0.35, "left", "Marion", "Marion Jones wins gold in Olympics"
+  1934, 0.35, "left", "Jessie", "Most\nunisex year",
+  1977, 0.35, "left", "Marion", "Marion Jones wins\ngold in Olympics", 
+  2006, 0.35, "right", "Jackie", "Jackie Robinson to\nmajor league", 
+  1930, 0.35, "left", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
+  1936, 0.35, "left", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
 )
-
 ```
 
 
