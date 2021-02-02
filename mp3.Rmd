@@ -351,6 +351,29 @@ general_context <- tribble(
   1930, 0.35, "left", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
   1936, 0.35, "left", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
 )
+
+general_context
+
+general_segments <- tribble(
+  ~year, ~pct_girls, ~name, 
+  1940, 0.43, "Jessie",
+  1940, 0.5, "Jessie",
+  1949, 0.4956897, "Jessie",
+  1930, 0.43, "Marion",
+  1930, 0.5, "Marion", 
+  1934, 0.5, "Marion", 
+  2000, 0.43, "Jackie",
+  2000, 0.498, "Jackie",
+  2006, 0.498, "Jackie",
+  1923, 0.43, "Ariel",
+  1923, 0.498, "Ariel",
+  1930, 0.498, "Ariel",
+  1928, 0.43, "Jamie", 
+  1936, 0.5, "Jamie",
+  1936, 0.5, "Jamie"
+)
+
+general_segments
 ```
 
 > Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
@@ -370,13 +393,13 @@ ranked_names <- most_unisex_names %>%
 
 Kitty scratch work 
 ```{r}
-ranked_names <- most_unisex_names %>%
+name_label <- most_unisex_names %>%
   mutate(fct_rmse = factor(rmse),
          name_rank = min_rank(fct_rmse), 
-         rank_test = row_number(), 
-         name_label = paste(name_rank, name, sep = ". "))
-
-rank_test = fd_rank
+         ,
+         rank2 = min_rank("mame"),
+         name_label = paste(name_rank, name, sep = ". ")) %>% 
+  inner_join()
 
 ranked_names
 ```
@@ -390,15 +413,16 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   facet_wrap(~name, scales='free_x', ncol = 7) +
   geom_point(data = unisex_years, fill = "white", pch = 21, size = 3) +
   geom_path(data = jessie_segments) +
+  geom_path(data = general_segments) +
   geom_text(
     data = jessie_labels, 
     aes(label = label), 
     color = "white"
   ) +
-  geom_text(
-    data = jessie_context, family = "Century Gothic",
-    aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
-  ) +
+  #geom_text(
+  #  data = jessie_context, family = "Century Gothic",
+  #  aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
+  #) +
   geom_text(
   data = general_context, family = "Century Gothic",
     aes(x = year_label, y = vpos, label = text, hjust = hjust), 
@@ -412,7 +436,7 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   ) +
   scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
                      labels = c("1940", "'60", "'80", "2000"), 
-                     expand = c(0,0),
+                     #expand = c(0,0),
                      NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
