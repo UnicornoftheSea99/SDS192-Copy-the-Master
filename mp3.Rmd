@@ -346,9 +346,9 @@ ranked_names <- most_unisex_names %>%
   mutate(
         fct_rmse = factor(rmse),
         name_rank= dense_rank(fct_rmse),
+        name_label = paste(name_rank, name, sep = ".")
     )
 ranked_names
-
 ```
 
 
