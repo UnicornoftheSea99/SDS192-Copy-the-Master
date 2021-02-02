@@ -313,7 +313,7 @@ view(unisex_years)
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
-map_dfr(c("Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
+map_dfr(c("Jessie", "Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
 
 general_context <- tribble(
   ~year_label, ~vpos, ~hjust, ~name, ~text,
@@ -323,8 +323,30 @@ general_context <- tribble(
   1930, 0.35, "left", "Ariel", "The Little Mermaid\nsways Ariel towards girls",
   1936, 0.35, "left", "Jamie", "Jamie Hunter Cartwright\nappears on Bonanza"
 )
-```
 
+general_context
+
+general_segments <- tribble(
+  ~year, ~pct_girls, ~name, 
+  1940, 0.43, "Jessie",
+  1940, 0.5, "Jessie",
+  1949, 0.4956897, "Jessie",
+  1930, 0.43, "Marion",
+  1930, 0.5, "Marion", 
+  1934, 0.5, "Marion", 
+  2000, 0.43, "Jackie",
+  2000, 0.498, "Jackie",
+  2006, 0.498, "Jackie",
+  1923, 0.43, "Ariel",
+  1923, 0.498, "Ariel",
+  1930, 0.498, "Ariel",
+  1928, 0.43, "Jamie", 
+  1936, 0.5, "Jamie",
+  1936, 0.5, "Jamie"
+)
+
+general_segments
+```
 
 > Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
 
@@ -332,16 +354,26 @@ general_context <- tribble(
 
 ```{r}
 ranked_names <- most_unisex_names %>%
-  mutate(
-      #fct_rmse = factor(rmse),
-         #name_rank = min_rank(fct_rmse), 
-         #name_rank = dense_rank(fct_rmse),
-         name_rank = dense_rank(rmse),
-         #name_label = paste(name_rank, name, sep = ". ")
-         )
+  mutate(fct_rmse = factor(rmse),
+         name_rank = min_rank(fct_rmse), 
+         name_label = paste(name_rank, name, sep = ". "))
+
 #most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
+```
+
+Kitty scratch work 
+```{r}
+name_label <- most_unisex_names %>%
+  mutate(fct_rmse = factor(rmse),
+         name_rank = min_rank(fct_rmse), 
+         ,
+         rank2 = min_rank("mame"),
+         name_label = paste(name_rank, name, sep = ". ")) %>% 
+  inner_join()
+
+ranked_names
 ```
 
 ### Step 2I: Draw the plot
@@ -353,26 +385,31 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   facet_wrap(~name, scales='free_x', ncol = 7) +
   geom_point(data = unisex_years, fill = "white", pch = 21, size = 3) +
   geom_path(data = jessie_segments) +
+  geom_path(data = general_segments) +
   geom_text(
     data = jessie_labels, 
     aes(label = label), 
     color = "white"
   ) +
+  #geom_text(
+  #  data = jessie_context, family = "Century Gothic",
+  #  aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
+  #) +
   geom_text(
-    data = jessie_context, family = "Century Gothic",
-    aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
-  ) +
-  geom_text(
-  data = marion_context, family = "Century Gothic",
+  data = general_context, family = "Century Gothic",
     aes(x = year_label, y = vpos, label = text, hjust = hjust), 
     vjust = "top"
   ) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
     breaks = c(0, 0.5, 1),
-    labels = scales::percent
+    labels = scales::percent,
+    expand = c(0,0)
   ) +
-  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
+                     labels = c("1940", "'60", "'80", "2000"), 
+                     #expand = c(0,0),
+                     NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
