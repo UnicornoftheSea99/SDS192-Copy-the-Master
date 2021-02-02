@@ -263,7 +263,6 @@ data <- babynames %>%
   pivot_wider(names_from = sex, values_from = n) %>%
   mutate(pct_girls = F / (F + M)) %>%
   inner_join(most_unisex_names, by = c("name" = "name"))
-dim(data)
 
 ```
 
@@ -350,18 +349,6 @@ ranked_names <- most_unisex_names %>%
     )
 ranked_names
 
-```
-
-```{r}
-ranked_names <- most_unisex_names %>%
-  inner_join(fd_names, by = c("name" = "name")) %>% 
-  mutate(
-        fct_rmse = factor(rmse),
-        name_rank= dense_rank(fct_rmse),
-         name_label = paste(fd_rank, name, sep = ". ")
-    )
-fd_names
-ranked_names
 ```
 
 
