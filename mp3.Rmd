@@ -342,7 +342,7 @@ view(unisex_years)
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
-map_dfr(c("Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
+map_dfr(c("Jessie", "Marion", "Jackie", "Ariel", "Jamie"), most_unisex_yr)
 
 general_context <- tribble(
   ~year_label, ~vpos, ~hjust, ~name, ~text,
@@ -354,7 +354,6 @@ general_context <- tribble(
 )
 ```
 
-
 > Hint: Read [the section in the book about customizing **gplot2** graphics](https://mdsr-book.github.io/mdsr2e/ch-vizIII.html#sec:themes)
 
 ### Step 2H: Order the facets
@@ -364,13 +363,26 @@ ranked_names <- most_unisex_names %>%
   mutate(fct_rmse = factor(rmse),
          name_rank = min_rank(fct_rmse), 
          name_label = paste(name_rank, name, sep = ". "))
+
 #most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
 ```
 
+Kitty scratch work 
+```{r}
+ranked_names <- most_unisex_names %>%
+  mutate(fct_rmse = factor(rmse),
+         name_rank = min_rank(fct_rmse), 
+         rank_test = row_number(), 
+         name_label = paste(name_rank, name, sep = ". "))
+
+rank_test = fd_rank
+
+ranked_names
+```
+
 ### Step 2I: Draw the plot
-definitely not finished yet!
 
 ```{r}
 ggplot(data, aes(x = year, y = pct_girls)) +
@@ -389,16 +401,20 @@ ggplot(data, aes(x = year, y = pct_girls)) +
     aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
   ) +
   geom_text(
-  data = marion_context, family = "Century Gothic",
+  data = general_context, family = "Century Gothic",
     aes(x = year_label, y = vpos, label = text, hjust = hjust), 
     vjust = "top"
   ) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
     breaks = c(0, 0.5, 1),
-    labels = scales::percent
+    labels = scales::percent,
+    expand = c(0,0)
   ) +
-  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), labels = c("1940", "'60", "'80", "2000"), NULL) +
+  scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
+                     labels = c("1940", "'60", "'80", "2000"), 
+                     expand = c(0,0),
+                     NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
     panel.background = element_rect(fill = "#92bdd3"),
