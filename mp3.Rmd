@@ -39,13 +39,23 @@ library(tidyr)
 library(ggplot2)
 ```
 
-## Instructions
+## Our Approach
 
-> READ THE INSTRUCTIONS: https://beanumber.github.io/sds192/mod_babynames.html
+The goal of this project was to mimic the data graphic from the Flowing Data post by finding and then plotting the most unisex names (meaning equally assigned to female and male babies) found in the babynames package. A general strategy we employed was to go through the Jessie start code line by line to figure out what each part was doing, which helped us successfully generalize it later.
 
-Your goal in Step 1 is to recreate this data graphic as closely as you can:
+To start, we found the root mean squared error (RMSE) for the name "Jessie". Then, to find the RMSE for all names, we first considered how we could make the data from the babynames package more manageable. First, we filtered by the years in between 1930 and 2012 and then removed rows in which there was a NA value (meaning that the name was not assigned to either males or females.) We also reshaped the data by applying pivot_wider.  After altering the data, we created a function called find_rmse that adds columns error and squared error and then summarizes that data to give the mean squared error (mse) and root mean squared error (rmse). We then applied this function to the altered data, called all_babies, that we grouped by name. 
 
-![](https://beanumber.github.io/sds192/gfx/jessie.png)
+We tried various things when filtering to get the top 35 most unisex names: filtering out names with NA in the M or F column, finding the total occurrences of each name and considering the most popular names, and finding the total years in which each name appeared and including names that occurred in at least 70 years. We were not entirely successful at matching the original data graphic. 
+
+To gather the data for the time series, we filtered the original babynames data frame to include only the years of interest. We rearranged and mutated the data based on the “Jessie” plot code. To limit the names included to only the top 35 most unisex ones, we did an inner join between our modified babynames data frame and the data frame we created earlier with the 35 most unisex names. 
+
+To draw the points representing the most unisex years, we started with the code to draw the point for the name “Jessie” and wrote a function to generalize the process. Then we used map_dfr() to iterate those steps over the list of the top 35 most unisex names. 
+
+To create the annotations for the exhibit, we used the tribble() or transposed tibble command to manually create the descriptions for each notable name trend. This enabled us to construct a new data frame in which each row corresponds to a single segment, such as the year and the composition of boys to girls ratio. 
+
+Finally, to draw the plot, we used a combination of the line, area, point, path, and text geoms. We mimicked a lot of elements from the sample Jessie plot, including the fill and scale of the y axis, but changed other elements including but not limited to adding a facet wrap based on name and adding annotations with segments to the plots of certain names.
+
+![Copy the Master Assignment](https://beanumber.github.io/sds192/gfx/jessie.png)
 
 ## Step 1: Make the plot for "Jessie"
 
