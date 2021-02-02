@@ -391,19 +391,6 @@ ranked_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
 ```
 
-Kitty scratch work 
-```{r}
-name_label <- most_unisex_names %>%
-  mutate(fct_rmse = factor(rmse),
-         name_rank = min_rank(fct_rmse), 
-         ,
-         rank2 = min_rank("mame"),
-         name_label = paste(name_rank, name, sep = ". ")) %>% 
-  inner_join()
-
-ranked_names
-```
-
 ### Step 2I: Draw the plot
 
 ```{r}
@@ -436,7 +423,7 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   ) +
   scale_x_continuous(breaks = c(1940, 1960, 1980, 2000), 
                      labels = c("1940", "'60", "'80", "2000"), 
-                     #expand = c(0,0),
+                     expand = c(0,0),
                      NULL) +
   scale_fill_manual(values = c("#eaac9e", "black")) +
   theme(
@@ -444,9 +431,9 @@ ggplot(data, aes(x = year, y = pct_girls)) +
     axis.ticks.y = element_blank(),
     panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
-    text = element_text(family = "Century Gothic"),
+    #text = element_text(family = "Century Gothic"),
     strip.background = element_blank(),
-    strip.text = element_text(hjust = 0, face = "bold", size = 14)
+    strip.text = element_text(hjust = 0, face = "bold", size = 10)
   ) +
   guides(fill = FALSE) +
   labs(
