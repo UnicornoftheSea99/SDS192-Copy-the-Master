@@ -355,13 +355,28 @@ ranked_names <- most_unisex_names %>%
   mutate(
         fct_rmse = factor(rmse),
          #name_rank = min_rank(fct_rmse), 
-        name_rank=dense_rank(fct_rmse),
-         name_label = paste(name_rank, name, sep = ". ")
+        name_rank= dense_rank(fct_rmse),
+         name_label = paste(fd_names, name, sep = ". ")
     )
-
+fd_names
+ranked_names
 #most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
+```
+
+Kitty scratch work attempt #2 
+```{r}
+ranked_names <- most_unisex_names %>%
+  inner_join(fd_names, by = c("name" = "name")) %>% 
+  mutate(
+        fct_rmse = factor(rmse),
+         #name_rank = min_rank(fct_rmse), 
+        name_rank= dense_rank(fct_rmse),
+         name_label = paste(fd_rank, name, sep = ". ")
+    )
+fd_names
+ranked_names
 ```
 
 ### Step 2I: Draw the plot
