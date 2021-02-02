@@ -190,16 +190,8 @@ all_babies <- babynames %>%
   select(-prop) %>%
   pivot_wider(names_from = sex, values_from = n) %>%
    mutate(
-
-    #F = replace_na(F,0),
-    #M = replace_na(M,0), 
-  pct_girls = F / (F + M)
-
-   )%>%
+  pct_girls = F / (F + M))%>%
   filter(!is.na(F) & !is.na(M)) 
-
-# something is weird w/ the way we filtered out NAs, because  I found some in stuff we created later
-  
 ```
 
 ```{r}
@@ -214,25 +206,6 @@ rmse <- function(x) {
       rmse = sqrt(mse)
     )
 }
-
-# try to use function on fewer names 
-# trial_names <- babynames %>%
-#   filter(name == "Jessie" | name == "Marion" | name == "Jackie")
-
-# trial_names %>%
-#   filter( year >= 1930 & year < 2012) %>%
-#   select(-prop) %>%
-#   pivot_wider(names_from = sex, values_from = n) %>%
-#   group_by(name) %>%
-#   group_modify(~rmse(.x))
-
-# try entire data set - taking forever but might work?
-# babynames %>%
-#   filter( year >= 1930 & year < 2012) %>%
-#   select(-prop) %>%
-#   pivot_wider(names_from = sex, values_from = n) %>%
-#   group_by(name) %>%
-#   group_modify(~rmse(.x))
 
 ```
 
