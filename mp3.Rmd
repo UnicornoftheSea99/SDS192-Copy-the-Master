@@ -195,7 +195,7 @@ all_babies <- babynames %>%
 ```
 
 ```{r}
-rmse <- function(x) {
+find_rmse <- function(x) {
   x %>%
     mutate(
            error = pct_girls - 0.5,
@@ -212,7 +212,7 @@ rmse <- function(x) {
 ```{r, eval=FALSE}
 all_babies %>%
   group_by(name)%>%
-  group_modify(~rmse(.x))
+  group_modify(~find_rmse(.x))
 ```
 
 
@@ -354,9 +354,12 @@ general_segments
 
 ```{r}
 ranked_names <- most_unisex_names %>%
-  mutate(fct_rmse = factor(rmse),
-         name_rank = min_rank(fct_rmse), 
-         name_label = paste(name_rank, name, sep = ". "))
+  mutate(
+        fct_rmse = factor(rmse),
+         #name_rank = min_rank(fct_rmse), 
+        name_rank=dense_rank(fct_rmse),
+         name_label = paste(name_rank, name, sep = ". ")
+    )
 
 #most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
