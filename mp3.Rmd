@@ -257,6 +257,7 @@ popular_names <- all_babies %>%
     total_occurences = sum(F+M)
   ) %>%
   filter(total_years >= 70) %>%
+  filter(name != "Unknown")
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
   arrange(desc(total_occurences))%>%
  head(1000)
@@ -289,56 +290,6 @@ data <- babynames %>%
 dim(data)
 
 # dimensions not 35n, probably because some names are missing in certain years?
-```
-
-```{r, eval = FALSE}
-# write a function to compute RMSE
-rmse_all <- function(name_arg) {
-  all_babies %>%
-    filter(name == name_arg) %>%
-     mutate(
-       pct_girls = F / (F + M),
-       error = pct_girls - 0.5,
-       squared_error = error^2) %>%
-  summarize(
-    mse = mean(squared_error),
-    rmse = sqrt(mse)
-  )
-}
-
-rmse_all("Jessie")
-
-map_dfr(c(
-  "Jessie", "Marion", "Jackie", "Alva", "Ollie",
-  "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
-  "Carey", "Tommie", "Angel", "Hollis", "Sammie",
-  "Jamie", "Kris", "Robbie", "Tracy", "Merrill",
-  "Noel", "Rene", "Johnnie", "Ariel", "Jan",
-  "Devon", "Cruz", "Michel", "Gale", "Robin",
-  "Dorian", "Casey", "Dana", "Kim", "Shannon"
-), rmse_all)
-
-#map2_dfr(c("Benjamin", "Cory"), rmse_all)
-```
-
-
-```{r}
-#CHECKING THAT IT WORKS, IT DOES!!
-#rmse_all("Jessie")
-
-# map(c(
-#   "Jessie", "Marion", "Jackie", "Alva", "Ollie",
-#   "Jody", "Cleo", "Kerry", "Frankie", "Guadalupe",
-#   "Carey", "Tommie", "Angel", "Hollis", "Sammie",
-#   "Jamie", "Kris", "Robbie", "Tracy", "Merrill",
-#   "Noel", "Rene", "Johnnie", "Ariel", "Jan",
-#   "Devon", "Cruz", "Michel", "Gale", "Robin",
-#   "Dorian", "Casey", "Dana", "Kim", "Shannon"
-# ), rmse_all)
-
-#will use map_dfr to apply to all names
-```
-
 ```
 
 ### Step 2E: Gather the data you need to draw the points
@@ -408,10 +359,11 @@ marion_context <- tribble(
 ### Step 2H: Order the facets
 
 ```{r}
-#all ranks 1,  convert rmse to a factor first? 
-most_unisex_names <- most_unisex_names %>%
-  mutate(name_rank = dense_rank(rmse))
-most_unisex_names
+ranked_names <- most_unisex_names %>%
+  mutate(fct_rmse = factor(rmse),
+         name_rank = min_rank(fct_rmse), 
+         name_label = paste(name_rank, name, sep = ". "))
+#most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
 ```
