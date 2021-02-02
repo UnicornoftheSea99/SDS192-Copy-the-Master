@@ -255,6 +255,7 @@ popular_names <- all_babies %>%
     total_occurences = sum(F+M)
   ) %>%
   filter(total_years >= 70) %>%
+  filter(name != "Unknown")
   #filter(avg_pct_girls>=0.3, avg_pct_girls<=0.7) #%>%
   arrange(desc(total_occurences))%>%
  head(1000)
@@ -308,36 +309,44 @@ most_unisex_yr <- function(name_arg) {
 names_list <- most_unisex_names %>% 
   select(-mse, -rmse) %>%
   deframe()
-unisex_years <- map_dfr(names_list, most_unisex_yr)
+  
+unisex_years <- map_dfr(names_list, most_unisex_yr) 
 
-unisex_years
+view(unisex_years)
 ```
 
 ### Step 2F: Polish the data
+```{r}
+# remove unknown 
+all_babies <- all_babies %>% filter(name != "Unknown")
+
+#repeat from above 
+most_unisex_yr <- function(name_arg) {
+  all_babies %>%
+    filter(name == name_arg) %>%
+    mutate(distance = abs(pct_girls - 0.5)) %>%
+    arrange(distance) %>%
+    head(1)
+}
+
+names_list <- most_unisex_names %>% 
+  select(-mse, -rmse) %>%
+  deframe()
+  
+unisex_years <- map_dfr(names_list, most_unisex_yr) 
+
+view(unisex_years)
+```
 
 ### Step 2G: Create the annotations
 -  need labels for Marion, Jackie, Ariel, Jamie
 -  as of now only Marion is in our filtered list of names
 ```{r}
-marion <- babynames %>%
-  filter(
-    name == "Marion", 
-    year >= 1930 & year < 2012
-  ) %>%
-  select(-prop) %>%
-  pivot_wider(names_from = sex, values_from = n) %>%
-  mutate(pct_girls = F / (F + M))
-marion
-
-marion_unisex_year <- marion %>%
-  mutate(distance = abs(pct_girls - 0.5)) %>%
-  arrange(distance) %>%
-  head(1)
-jessie_unisex_year
+marion_unisex_year <- most_unisex_yr("Marion")
 
 marion_context <- tribble(
   ~year_label, ~vpos, ~hjust, ~name, ~text,
-  1934, 0.35, "left", "Marion", "Most\nunisex year"
+  1977, 0.35, "left", "Marion", "Marion Jones wins gold in Olympics"
 )
 
 ```
@@ -348,10 +357,11 @@ marion_context <- tribble(
 ### Step 2H: Order the facets
 
 ```{r}
-#all ranks 1,  convert rmse to a factor first? 
-most_unisex_names <- most_unisex_names %>%
-  mutate(name_rank = dense_rank(rmse))
-most_unisex_names
+ranked_names <- most_unisex_names %>%
+  mutate(fct_rmse = factor(rmse),
+         name_rank = min_rank(fct_rmse), 
+         name_label = paste(name_rank, name, sep = ". "))
+#most_unisex_names
 #most_unisex_names <- most_unisex_names %>%
   #mutate(name_rank = dense_rank(rmse))
 ```
@@ -374,6 +384,11 @@ ggplot(data, aes(x = year, y = pct_girls)) +
   geom_text(
     data = jessie_context, family = "Century Gothic",
     aes(x = year_label, y = vpos, label = text, hjust = hjust), vjust = "top"
+  ) +
+  geom_text(
+  data = marion_context, family = "Century Gothic",
+    aes(x = year_label, y = vpos, label = text, hjust = hjust), 
+    vjust = "top"
   ) +
   scale_y_continuous(NULL, 
     limits = c(0, 1),
@@ -409,9 +424,9 @@ text_stats()
 
 In this assignment, we attempted the following [standards](https://beanumber.github.io/sds192/standards.html):
 
-- `r standard_button("wrangling")`: We met the Wrangling standard because we utilized functions such as group_by() and group_modify()
+- `r standard_button("wrangling")`: We met the Wrangling standard because we utilized functions such as group_by() and group_modify(), as well as mutate to optimize the code for readability and performance. 
 - `r standard_button("relational")`: We met the Relational standard because we utilized the inner_join function to include potentially missing data and merge various data frames.
-- `r standard_button("reshape")`: We met the Reshape standard because we...
+- `r standard_button("reshape")`: We met the Reshape standard because we transformed the various data frames with pivot functions for the lists. 
 - `r standard_button("aesthetics")`: We mastered the Aesthetics standard because we customized and utilized a wide range of available geoms and color palettes, along with specific labeling of the graphic. 
 - `r standard_button("markdown")`: We mastered the R Markdown standard because we employed formatting within the Markdown file to incllude a variety of code chunks, text, and graphics. 
 
